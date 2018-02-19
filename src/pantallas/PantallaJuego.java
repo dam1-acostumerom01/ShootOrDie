@@ -12,6 +12,7 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import base.HiloTiempo;
 import base.PanelJuego;
 import base.Sprite;
 
@@ -27,8 +28,11 @@ public class PantallaJuego implements Pantalla{
 	public Sprite fire;
 	public double tiempoProtagonista, tiempoEnemigo,tiempoInicial,tiempoFases;
 	public double tiempoDeJuego = -1;
+	public HiloTiempo hiloTiempo;
+	public HiloTiempo hiloMaquina;
+	public HiloTiempo hiloProtagonista;
 	Random rd = new Random();
-	int aleatorio = rd.nextInt(400)+300;
+	int aleatorio = rd.nextInt(40)+30;
 	private DecimalFormat formatoDecimal;
 	boolean ganaMaquina = false;
 	public PantallaJuego(PanelJuego panelJuego) {
@@ -48,14 +52,17 @@ public class PantallaJuego implements Pantalla{
 			e.printStackTrace();
 		}
 		
-		double aleatorio = Math.random()+0.2;
+		double tiempoMaquina = Math.random()+0.7;
 		
 		
-		protagonista = new Sprite(Color.black, 100, 100, (panelJuego.getWidth()/2)-50, (panelJuego.getHeight()/2)+150, "Imagenes/protagonistas/protagonista_03.png");
-		enemigo = new Sprite(Color.black, 100, 100, (panelJuego.getWidth()/2)-50, (panelJuego.getHeight()/2)-250,aleatorio, "Imagenes/enemigos/enemigo_02.png");
-		formatoDecimal = new DecimalFormat("#.##");
+		protagonista = new Sprite(Color.black, 200, 200, (panelJuego.getWidth()/2)-100, (panelJuego.getHeight()/2)+80, "Imagenes/protagonistas/protagonista_03.png");
+		enemigo = new Sprite(Color.black, 200, 200, (panelJuego.getWidth()/2)-100, (panelJuego.getHeight()/2)-280,tiempoMaquina, "Imagenes/enemigos/enemigo_02.png");
+		formatoDecimal = new DecimalFormat("#.###");
 		System.out.println("DISPARO ENEMIGO EN: "+enemigo.getTiempoDisparo());
 		tiempoFases=0;
+		
+		hiloTiempo = new HiloTiempo(tiempoMaquina);
+		
 	}
 
 	@Override
@@ -65,9 +72,8 @@ public class PantallaJuego implements Pantalla{
 		protagonista.pintarSpriteEnMundo(g);
 		enemigo.pintarSpriteEnMundo(g);
 		
-		g.drawString("Tiempo de Juego: "+formatoDecimal.format(tiempoDeJuego / 1000000000), 200,200);
-		g.drawString("Tiempo de Juego: "+formatoDecimal.format(tiempoDeJuego / 1000000000), 200,200);
-		g.drawString("Tiempo de Juego: "+formatoDecimal.format(tiempoDeJuego / 1000000000), 200,200);
+		g.drawString("Tiempo de Juego: "+formatoDecimal.format(hiloTiempo.getTiempoDeJuego() / 1000000000), 200,200);
+		
 		
 		}
 
@@ -75,13 +81,15 @@ public class PantallaJuego implements Pantalla{
 	public void ejecutarFrame() {
 		while (true) {
 			panelJuego.repaint();
-
+			
 			try {
 				Thread.sleep(25);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			actualizarTiempo();
+			if (hiloTiempo.isPausa()) {
+				panelJuego.setPantalla(new PantallaDerrota(panelJuego));
+			}
 			
 		}
 	}
@@ -94,24 +102,31 @@ public class PantallaJuego implements Pantalla{
 	@Override
 	public void pulsarRaton(MouseEvent e) {
 		
+		if (!ganaMaquina && tiempoDeJuego>0) {
+			protagonista.setTiempoDisparo(tiempoDeJuego/1000000000);
+			System.out.println("Tiempo prota: "+protagonista.getTiempoDisparo());
+			ganaMaquina=true;
+			try {
+				new Thread().sleep(2000);
+			} catch (InterruptedException ex) {
+				// TODO Auto-generated catch block
+				ex.printStackTrace();
+			}
+			panelJuego.setPantalla(new PantallaVictoria(panelJuego));
+		}
+		
 	}
 
 	@Override
 	public void redimensionarPantalla() {
 		fondoEscalado = fondo.getScaledInstance(panelJuego.getWidth(), panelJuego.getHeight(), Image.SCALE_SMOOTH);
-	
+		
 	}
 	
 	private void rellenarFondo(Graphics g) {
 		g.drawImage(fondoEscalado, 0, 0, null);
 	}
 	
-	
-	public void disparoEnemigo(Graphics g) {
-		
-			System.out.println(enemigo.getTiempoDisparo());
-			
-	}
 	
 	/**
 	 * Método que comprueba que se dispara cuando se debe, es decir, después de la señal.
@@ -133,19 +148,23 @@ public class PantallaJuego implements Pantalla{
 	 */
 	public void pintarFases(Graphics g) {
 		
-		if((tiempoFases <= 100)) {
+		if((tiempoFases <= 10)) {
 			ready = new Sprite(Color.BLACK, 200, 100, (panelJuego.getWidth()/2)-100, (panelJuego.getHeight()/2)-50, "Imagenes/fases/ready.png");
 			ready.pintarSpriteEnMundo(g);
 		}
-		if ((tiempoFases >= 150) && (tiempoFases<=250)) {
+		if ((tiempoFases >= 15) && (tiempoFases<=25)) {
 			steady = new Sprite(Color.BLACK, 200, 100, (panelJuego.getWidth()/2)-100, (panelJuego.getHeight()/2)-50, "Imagenes/fases/steady.png");
 			steady.pintarSpriteEnMundo(g);
 		}
 		
 		if (tiempoFases==aleatorio) {
-			tiempoDeJuego = 0;
-			tiempoInicial = System.nanoTime();
-			disparoEnemigo(g);
+			//tiempoDeJuego = 0;
+			hiloTiempo.iniciarTiempoDeJuego();
+			
+			//Al salir la instrucción fire, comienza el tiempo inicial.
+			//tiempoInicial = System.nanoTime();
+			hiloTiempo.iniciarTiempoInicial();
+			hiloTiempo.start();
 		}
 		
 		if ((tiempoFases>=aleatorio)&&(tiempoFases<=(aleatorio+20))) {
@@ -155,24 +174,36 @@ public class PantallaJuego implements Pantalla{
 			
 			
 		}
-		
 		tiempoFases++;
-		
-		
+
 	}
 	
 	/**
 	 * MÃ©todo que actualiza el tiempo que ha transcurrido de juego
 	 */
 	public void actualizarTiempo() {
-		float tiempoActual = System.nanoTime(); // <--AquÃ­ se mide el nuevo tiempo. En esta precisa instrucciÃ³n.
-		if ((tiempoDeJuego>=0) && (!ganaMaquina)) {
+		/*float tiempoActual = System.nanoTime(); // <--AquÃ­ se mide el nuevo tiempo. En esta precisa instrucciÃ³n.
+		if((tiempoDeJuego>=0)&&(!ganaMaquina)) {
 			tiempoDeJuego = tiempoActual - tiempoInicial;
-		}
+			System.out.println("Tiempo de Juego: "+tiempoDeJuego/ 1000000000);
+			
+		}*/
 		
-		if (tiempoDeJuego>=(1+enemigo.getTiempoDisparo())) {
+		//Si el tiempo de juego redondeado llega al valor del disparo del enemigo, se para el tiempo
+		/*if ((tiempoDeJuego/ 1000000000)>=enemigo.getTiempoDisparo()) {
 			ganaMaquina=true;
-		}
+			System.out.println("Tiempo de Juego: "+tiempoDeJuego);
+			try {
+				new Thread().sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			panelJuego.setPantalla(new PantallaDerrota(panelJuego));
+		}*/
+		
+		
+		
 		
 	}
 	

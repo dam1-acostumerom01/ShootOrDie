@@ -20,11 +20,11 @@ public class PantallaDerrota implements Pantalla{
 	PanelJuego panelJuego;
 	String tiempo;
 	
-	public PantallaDerrota(PanelJuego panelJuego,String tiempo) {
+	public PantallaDerrota(PanelJuego panelJuego) {
 		this.panelJuego = panelJuego;
 		inicializarPantalla();
 		redimensionarPantalla();
-		this.tiempo=tiempo;
+		
 	}
 	
 	
@@ -35,7 +35,7 @@ public class PantallaDerrota implements Pantalla{
 	@Override
 	public void inicializarPantalla() {
 		try {
-			fondo = ImageIO.read(new File("Imagenes/pantallaDerrota.jpg"));
+			fondo = ImageIO.read(new File("Imagenes/fondos/gameover.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

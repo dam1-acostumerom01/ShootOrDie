@@ -20,11 +20,11 @@ public class PantallaVictoria implements Pantalla{
 	PanelJuego panelJuego;
 	String tiempo;
 	
-	public PantallaVictoria(PanelJuego panelJuego,String tiempo) {
+	public PantallaVictoria(PanelJuego panelJuego) {
 		this.panelJuego = panelJuego;
 		inicializarPantalla();
 		redimensionarPantalla();
-		this.tiempo=tiempo;
+		
 	}
 	
 	
@@ -35,7 +35,7 @@ public class PantallaVictoria implements Pantalla{
 	@Override
 	public void inicializarPantalla() {
 		try {
-			fondo = ImageIO.read(new File("Imagenes/pantallaVictoria.jpg"));
+			fondo = ImageIO.read(new File("Imagenes/fondos/victoria.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

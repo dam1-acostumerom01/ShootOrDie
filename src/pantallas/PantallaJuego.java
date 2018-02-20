@@ -32,7 +32,7 @@ public class PantallaJuego implements Pantalla{
 	public HiloTiempo hiloMaquina;
 	public HiloTiempo hiloProtagonista;
 	Random rd = new Random();
-	int aleatorio = rd.nextInt(40)+30;
+	int aleatorio = rd.nextInt(400)+300;
 	private DecimalFormat formatoDecimal;
 	boolean ganaMaquina = false;
 	public PantallaJuego(PanelJuego panelJuego) {
@@ -148,11 +148,11 @@ public class PantallaJuego implements Pantalla{
 	 */
 	public void pintarFases(Graphics g) {
 		
-		if((tiempoFases <= 10)) {
+		if((tiempoFases <= 100)) {
 			ready = new Sprite(Color.BLACK, 200, 100, (panelJuego.getWidth()/2)-100, (panelJuego.getHeight()/2)-50, "Imagenes/fases/ready.png");
 			ready.pintarSpriteEnMundo(g);
 		}
-		if ((tiempoFases >= 15) && (tiempoFases<=25)) {
+		if ((tiempoFases >= 150) && (tiempoFases<=250)) {
 			steady = new Sprite(Color.BLACK, 200, 100, (panelJuego.getWidth()/2)-100, (panelJuego.getHeight()/2)-50, "Imagenes/fases/steady.png");
 			steady.pintarSpriteEnMundo(g);
 		}
@@ -177,36 +177,6 @@ public class PantallaJuego implements Pantalla{
 		tiempoFases++;
 
 	}
-	
-	/**
-	 * Método que actualiza el tiempo que ha transcurrido de juego
-	 */
-	public void actualizarTiempo() {
-		/*float tiempoActual = System.nanoTime(); // <--Aquí se mide el nuevo tiempo. En esta precisa instrucción.
-		if((tiempoDeJuego>=0)&&(!ganaMaquina)) {
-			tiempoDeJuego = tiempoActual - tiempoInicial;
-			System.out.println("Tiempo de Juego: "+tiempoDeJuego/ 1000000000);
-			
-		}*/
-		
-		//Si el tiempo de juego redondeado llega al valor del disparo del enemigo, se para el tiempo
-		/*if ((tiempoDeJuego/ 1000000000)>=enemigo.getTiempoDisparo()) {
-			ganaMaquina=true;
-			System.out.println("Tiempo de Juego: "+tiempoDeJuego);
-			try {
-				new Thread().sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			panelJuego.setPantalla(new PantallaDerrota(panelJuego));
-		}*/
-		
-		
-		
-		
-	}
-	
 	
 	
 	}

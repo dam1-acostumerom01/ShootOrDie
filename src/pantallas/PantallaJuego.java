@@ -33,7 +33,7 @@ public class PantallaJuego implements Pantalla {
 	public HiloTiempo hiloMaquina;
 	public HiloTiempo hiloProtagonista;
 	Random rd = new Random();
-	int aleatorio = rd.nextInt(200) + 200;
+	int aleatorio = rd.nextInt() + 100;
 	private DecimalFormat formatoDecimal;
 	boolean disparo = false;
 	int valor = 0;
@@ -48,6 +48,7 @@ public class PantallaJuego implements Pantalla {
 	@Override
 	public void inicializarPantalla() {
 		try {
+			
 			fondo = ImageIO.read(new File("Imagenes/fondos/fondoduelo.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -93,6 +94,12 @@ public class PantallaJuego implements Pantalla {
 			if ((hiloTiempo.isPausa())&&(!disparo)) {
 				valor = 2;
 				disparo = true;
+				try {
+					hiloTiempo.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				// panelJuego.setPantalla(new PantallaDerrota(panelJuego));
 			}
 
@@ -111,6 +118,12 @@ public class PantallaJuego implements Pantalla {
 			valor = 1;
 			disparo = true;
 			hiloTiempo.setPausa(true);
+			try {
+				hiloTiempo.join();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 	}
 
 	@Override
@@ -190,11 +203,11 @@ g.setFont(new Font("Arial", 3, 25));
 		case 0:
 			break;
 		case 1:
-			g.drawString(String.valueOf(protagonista.getTiempoDisparo()), panelJuego.getWidth() / 2,
+			g.drawString(formatoDecimal.format(protagonista.getTiempoDisparo()), panelJuego.getWidth() / 2-60,
 					panelJuego.getHeight() / 2 + 80);
 			break;
 		case 2:
-			g.drawString(String.valueOf(enemigo.getTiempoDisparo()), panelJuego.getWidth() / 2,
+			g.drawString(formatoDecimal.format(enemigo.getTiempoDisparo()), panelJuego.getWidth() / 2-60,
 					panelJuego.getHeight() / 2 - 80);
 			break;
 		}

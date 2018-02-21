@@ -25,6 +25,7 @@ public class PantallaInicial implements Pantalla {
 	}
 	
 	public PantallaInicial() {
+		
 	}
 	
 	@Override

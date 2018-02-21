@@ -62,9 +62,9 @@ public class VentanaPrincipal {
 	
 	public VentanaPrincipal() {
 		ventana = new JFrame();
-		ventana.setBounds(100, 50, 400, 600);
+		ventana.setBounds(100, 50, 600, 600);
 		ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+		//ventana.setResizable(false);
 
 		
 	}

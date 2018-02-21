@@ -1,5 +1,7 @@
 package base;
 
+
+
 public class HiloTiempo extends Thread{
 
 	public double tiempoInicial = -1;
@@ -16,6 +18,10 @@ public class HiloTiempo extends Thread{
 		this.tiempoDeJuego = tiempoDeJuego;
 	}
 
+	/**
+	 * 
+	 * @param disparo el tiempo de disparo de la máquina
+	 */
 	public HiloTiempo(double disparo) {
 		this.disparo = disparo;
 	}
@@ -92,7 +98,6 @@ public class HiloTiempo extends Thread{
 	}
 
 
-
 	@Override
 	public void run() {
 		while(!pausa) {
@@ -100,7 +105,7 @@ public class HiloTiempo extends Thread{
 		
 	}
 		try {
-			sleep(2000);
+			sleep(3000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

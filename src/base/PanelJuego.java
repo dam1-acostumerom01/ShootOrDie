@@ -26,6 +26,20 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 
 	private static final long serialVersionUID = 1L;
 	Pantalla pantallaActual;
+	
+	public Pantalla getPantallaActual() {
+		return pantallaActual;
+	}
+
+	public void setPantallaActual(Pantalla pantallaActual) {
+		this.pantallaActual = pantallaActual;
+	}
+
+	
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
 
 	/**
 	 * Constructor de PanelJuego. - Inicializa el arrayList de cuadrados. - Asigna

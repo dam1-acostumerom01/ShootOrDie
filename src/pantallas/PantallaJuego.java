@@ -113,6 +113,8 @@ System.out.println("Aleatorio: "+aleatorio);
 		valor = 1;
 		disparo = true;
 		//hiloTiempo.setPausa(true);
+		
+		panelJuego.setPantalla(new PantallaDerrota(panelJuego));
 	}
 
 	@Override

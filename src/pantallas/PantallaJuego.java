@@ -33,7 +33,7 @@ public class PantallaJuego implements Pantalla {
 	public HiloTiempo hiloMaquina;
 	public HiloTiempo hiloProtagonista;
 	Random rd = new Random();
-	int aleatorio = rd.nextInt() + 100;
+	int aleatorio = rd.nextInt(100)+100;
 	private DecimalFormat formatoDecimal;
 	boolean disparo = false;
 	int valor = 0;
@@ -42,13 +42,13 @@ public class PantallaJuego implements Pantalla {
 		this.panelJuego = panelJuego;
 		inicializarPantalla();
 		redimensionarPantalla();
-
+System.out.println("Aleatorio: "+aleatorio);
 	}
 
 	@Override
 	public void inicializarPantalla() {
 		try {
-			
+
 			fondo = ImageIO.read(new File("Imagenes/fondos/fondoduelo.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -78,7 +78,7 @@ public class PantallaJuego implements Pantalla {
 		if (disparo) {
 			pintarTiempo(g, valor);
 		}
-		
+
 	}
 
 	@Override
@@ -91,15 +91,10 @@ public class PantallaJuego implements Pantalla {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if ((hiloTiempo.isPausa())&&(!disparo)) {
+			if ((hiloTiempo.isPausa()) && (!disparo)) {
 				valor = 2;
 				disparo = true;
-				try {
-					hiloTiempo.join();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
 				// panelJuego.setPantalla(new PantallaDerrota(panelJuego));
 			}
 
@@ -113,17 +108,11 @@ public class PantallaJuego implements Pantalla {
 
 	@Override
 	public void pulsarRaton(MouseEvent e) {
-		
+
 		protagonista.setTiempoDisparo(hiloTiempo.getTiempoDeJuego() / 1000000000);
-			valor = 1;
-			disparo = true;
-			hiloTiempo.setPausa(true);
-			try {
-				hiloTiempo.join();
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		valor = 1;
+		disparo = true;
+		//hiloTiempo.setPausa(true);
 	}
 
 	@Override
@@ -150,7 +139,7 @@ public class PantallaJuego implements Pantalla {
 	 * @return true si el disparo ha sido ilegal : false si ha sido correcto
 	 */
 	public boolean disparoIlegal() {
-		if (hiloTiempo.getTiempoDeJuego() / 1000000000<0) {
+		if (hiloTiempo.getTiempoDeJuego() / 1000000000 < 0) {
 			return true;
 		}
 		return false;
@@ -197,18 +186,18 @@ public class PantallaJuego implements Pantalla {
 	}
 
 	public void pintarTiempo(Graphics g, int valor) {
-g.setColor(Color.WHITE);
-g.setFont(new Font("Arial", 3, 25));
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Arial", 3, 25));
 		switch (valor) {
 		case 0:
 			break;
 		case 1:
-			g.drawString(formatoDecimal.format(protagonista.getTiempoDisparo()), panelJuego.getWidth() / 2-60,
-					panelJuego.getHeight() / 2 + 80);
+			g.drawString(formatoDecimal.format(protagonista.getTiempoDisparo()), panelJuego.getWidth() / 2 - 20,
+					panelJuego.getHeight() / 2 + 100);
 			break;
 		case 2:
-			g.drawString(formatoDecimal.format(enemigo.getTiempoDisparo()), panelJuego.getWidth() / 2-60,
-					panelJuego.getHeight() / 2 - 80);
+			g.drawString(formatoDecimal.format(enemigo.getTiempoDisparo()), panelJuego.getWidth() / 2 - 20,
+					panelJuego.getHeight() / 2 - 90);
 			break;
 		}
 	}

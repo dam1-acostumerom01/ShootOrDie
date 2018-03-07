@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import base.HiloTiempo;
 import base.PanelJuego;
+import base.Sonido;
 import base.Sprite;
 
 public class PantallaJuego implements Pantalla {
@@ -32,6 +33,8 @@ public class PantallaJuego implements Pantalla {
 	Random rd = new Random();
 	int aleatorio = rd.nextInt(100) + 100;
 	private DecimalFormat formatoDecimal;
+	public Sonido miDisparo;
+	public Sonido disparoMaquina;
 	
 	
 	
@@ -93,6 +96,9 @@ public class PantallaJuego implements Pantalla {
 			}
 			if ((panelJuego.hiloTiempo.isPausa()) && (!panelJuego.disparo)) {
 				panelJuego.valor = 2; // se pinta el tiempo en la parte del sprite maquina
+				
+				protagonista.actualizarBuffer("Imagenes/protagonistas/protagonistadesarmado_03.png");
+				enemigo.actualizarBuffer("Imagenes/enemigos/enemigodisparando_02.png");
 				panelJuego.disparo = true;
 			}
 			pintarPantallaVictoria();
@@ -107,7 +113,12 @@ public class PantallaJuego implements Pantalla {
 
 	@Override
 	public void pulsarRaton(MouseEvent e) {
-
+		miDisparo = new Sonido("Sonidos/disparo1.mp3");
+		miDisparo.start();
+		protagonista.actualizarBuffer("Imagenes/protagonistas/protagonistadisparando_03.png");
+		enemigo.actualizarBuffer("Imagenes/enemigos/enemigodesarmado_02.png");
+		
+		
 		protagonista.setTiempoDisparo(panelJuego.hiloTiempo.getTiempoDeJuego() / 1000000000);
 		if (!panelJuego.ganaMaquina) {
 			panelJuego.valor = 1;
@@ -207,10 +218,13 @@ public class PantallaJuego implements Pantalla {
 		if (panelJuego.ganaMaquina) {
 			try {
 				Thread.sleep(2000);
+				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			
 			panelJuego.disparo = false;
 			panelJuego.setPantalla(new PantallaDerrota(panelJuego));
 		}
@@ -230,6 +244,8 @@ public class PantallaJuego implements Pantalla {
 		case 2:
 			g.drawString(formatoDecimal.format(enemigo.getTiempoDisparo()), panelJuego.getWidth() / 2 - 20,
 					panelJuego.getHeight() / 2 - 90);
+			disparoMaquina = new Sonido("Sonidos/disparo2.mp3");
+			disparoMaquina.start();
 			panelJuego.ganaMaquina = true;
 			break;
 		}

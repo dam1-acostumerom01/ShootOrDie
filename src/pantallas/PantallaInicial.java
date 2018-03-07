@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import base.HiloTiempo;
 import base.PanelJuego;
+import base.Sonido;
 
 public class PantallaInicial implements Pantalla {
 
@@ -38,6 +39,8 @@ public class PantallaInicial implements Pantalla {
 			e.printStackTrace();
 		}
 		panelJuego.valor = 0;
+		panelJuego.musicaInicio = new Sonido("Sonidos/musicaInicio.mp3");
+		panelJuego.musicaInicio.start();
 	}
 	
 	private void rellenarFondo(Graphics g) {
@@ -60,6 +63,7 @@ public class PantallaInicial implements Pantalla {
 		panelJuego.repaint();
 		try {	Thread.sleep(200);	} catch (InterruptedException e) {e.printStackTrace();}
 		colorLetra = colorLetra == Color.GREEN ? Color.RED : Color.GREEN;
+		
 	}
 
 	@Override
@@ -74,8 +78,13 @@ public class PantallaInicial implements Pantalla {
 		//panelJuego.disparo = false;
 		panelJuego.hiloTiempo = new HiloTiempo();
 		panelJuego.setPantallaActual(new PantallaJuego(panelJuego));
-		
-
+		panelJuego.musicaInicio.pararMusica();
+		try {
+			panelJuego.musicaInicio.join();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	@Override

@@ -29,6 +29,8 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 	public boolean disparo;
 	public HiloTiempo hiloTiempo;
 	public int valor;
+	public Sonido musicaInicio;
+	
 	
 	private static final long serialVersionUID = 1L;
 	Pantalla pantallaActual;

@@ -55,7 +55,7 @@ System.out.println("Aleatorio: "+aleatorio);
 			e.printStackTrace();
 		}
 
-		double tiempoMaquina = Math.random() + 0.5;
+		double tiempoMaquina = Math.random();
 
 		protagonista = new Sprite(Color.black, 200, 200, (panelJuego.getWidth() / 2) - 100,
 				(panelJuego.getHeight() / 2) + 80, "Imagenes/protagonistas/protagonista_03.png");
@@ -92,7 +92,7 @@ System.out.println("Aleatorio: "+aleatorio);
 				e.printStackTrace();
 			}
 			if ((hiloTiempo.isPausa()) && (!disparo)) {
-				valor = 2;
+				valor = 2; //se pinta el tiempo en la parte del sprite maquina
 				disparo = true;
 				
 				// panelJuego.setPantalla(new PantallaDerrota(panelJuego));
@@ -114,7 +114,7 @@ System.out.println("Aleatorio: "+aleatorio);
 		disparo = true;
 		//hiloTiempo.setPausa(true);
 		
-		panelJuego.setPantalla(new PantallaDerrota(panelJuego));
+		//panelJuego.setPantalla(new PantallaVictoria(panelJuego));
 	}
 
 	@Override

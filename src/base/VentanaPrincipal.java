@@ -52,8 +52,8 @@ import pantallas.PantallaInicial;
  */
 public class VentanaPrincipal {
 
-	final int anchoLienzo = 300;
-	final int altoLienzo = 300;
+	final int anchoLienzo = 600;
+	final int altoLienzo = 600;
 	
 	//Sigo teniendo la ventana
 	JFrame ventana;

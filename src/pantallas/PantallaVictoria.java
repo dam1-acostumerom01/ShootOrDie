@@ -74,6 +74,10 @@ public class PantallaVictoria implements Pantalla{
 
 	@Override
 	public void pulsarRaton(MouseEvent e) {
+		panelJuego.ganaMaquina=false;
+		panelJuego.heGanado=false;
+		panelJuego.disparo = false;
+		
 		panelJuego.setPantalla(new PantallaInicial(panelJuego));
 		
 	}

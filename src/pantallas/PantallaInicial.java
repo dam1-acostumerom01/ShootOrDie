@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import base.HiloTiempo;
 import base.PanelJuego;
 
 public class PantallaInicial implements Pantalla {
@@ -36,7 +37,7 @@ public class PantallaInicial implements Pantalla {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		panelJuego.valor = 0;
 	}
 	
 	private void rellenarFondo(Graphics g) {
@@ -70,7 +71,9 @@ public class PantallaInicial implements Pantalla {
 	@Override
 	public void pulsarRaton(MouseEvent e) {
 		//Al pulsar el ratón, la pantalla cambiará a la pantalla de juego
-		panelJuego.setPantalla(new PantallaJuego(panelJuego));
+		//panelJuego.disparo = false;
+		panelJuego.hiloTiempo = new HiloTiempo();
+		panelJuego.setPantallaActual(new PantallaJuego(panelJuego));
 		
 
 	}

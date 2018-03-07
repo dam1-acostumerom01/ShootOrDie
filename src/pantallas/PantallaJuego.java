@@ -29,20 +29,19 @@ public class PantallaJuego implements Pantalla {
 	public Sprite fire;
 	public double tiempoProtagonista, tiempoEnemigo, tiempoInicial, tiempoFases;
 	public double tiempoDeJuego = -1;
-	public HiloTiempo hiloTiempo;
-	public HiloTiempo hiloMaquina;
-	public HiloTiempo hiloProtagonista;
 	Random rd = new Random();
-	int aleatorio = rd.nextInt(100)+100;
+	int aleatorio = rd.nextInt(100) + 100;
 	private DecimalFormat formatoDecimal;
-	boolean disparo = false;
-	int valor = 0;
+	
+	
+	
 
 	public PantallaJuego(PanelJuego panelJuego) {
 		this.panelJuego = panelJuego;
+		
 		inicializarPantalla();
 		redimensionarPantalla();
-System.out.println("Aleatorio: "+aleatorio);
+		System.out.println("Aleatorio: " + aleatorio);
 	}
 
 	@Override
@@ -54,29 +53,31 @@ System.out.println("Aleatorio: "+aleatorio);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		double tiempoMaquina = Math.random();
-
+		
+		//Inicializo el Sprite del Protagonista
 		protagonista = new Sprite(Color.black, 200, 200, (panelJuego.getWidth() / 2) - 100,
 				(panelJuego.getHeight() / 2) + 80, "Imagenes/protagonistas/protagonista_03.png");
+		
+		//Inicializo el Sprite del enemigo
 		enemigo = new Sprite(Color.black, 200, 200, (panelJuego.getWidth() / 2) - 100,
-				(panelJuego.getHeight() / 2) - 280, tiempoMaquina, "Imagenes/enemigos/enemigo_02.png");
+				(panelJuego.getHeight() / 2) - 280, panelJuego.hiloTiempo.getDisparo(), "Imagenes/enemigos/enemigo_02.png");
+		
+		//Creo un formato decimal para mostrar el tiempo
 		formatoDecimal = new DecimalFormat("#.###");
 		System.out.println("DISPARO ENEMIGO EN: " + enemigo.getTiempoDisparo());
+		//Inicializo el tiempo de fases
 		tiempoFases = 0;
-
-		hiloTiempo = new HiloTiempo(tiempoMaquina);
-
 	}
 
 	@Override
 	public void renderizarPantalla(Graphics g) {
+		System.out.println("Valor?   --> "+panelJuego.valor);
 		rellenarFondo(g);
 		pintarFases(g);
 		protagonista.pintarSpriteEnMundo(g);
 		enemigo.pintarSpriteEnMundo(g);
-		if (disparo) {
-			pintarTiempo(g, valor);
+		if (panelJuego.disparo) {
+			pintarTiempo(g, panelJuego.valor);
 		}
 
 	}
@@ -85,19 +86,17 @@ System.out.println("Aleatorio: "+aleatorio);
 	public void ejecutarFrame() {
 		while (true) {
 			panelJuego.repaint();
-
 			try {
 				Thread.sleep(25);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if ((hiloTiempo.isPausa()) && (!disparo)) {
-				valor = 2; //se pinta el tiempo en la parte del sprite maquina
-				disparo = true;
-				
-				// panelJuego.setPantalla(new PantallaDerrota(panelJuego));
+			if ((panelJuego.hiloTiempo.isPausa()) && (!panelJuego.disparo)) {
+				panelJuego.valor = 2; // se pinta el tiempo en la parte del sprite maquina
+				panelJuego.disparo = true;
 			}
-
+			pintarPantallaVictoria();
+			pintarPantallaDerrota();
 		}
 	}
 
@@ -109,12 +108,15 @@ System.out.println("Aleatorio: "+aleatorio);
 	@Override
 	public void pulsarRaton(MouseEvent e) {
 
-		protagonista.setTiempoDisparo(hiloTiempo.getTiempoDeJuego() / 1000000000);
-		valor = 1;
-		disparo = true;
-		//hiloTiempo.setPausa(true);
+		protagonista.setTiempoDisparo(panelJuego.hiloTiempo.getTiempoDeJuego() / 1000000000);
+		if (!panelJuego.ganaMaquina) {
+			panelJuego.valor = 1;
+			panelJuego.heGanado = true;
+		}
 		
-		//panelJuego.setPantalla(new PantallaVictoria(panelJuego));
+		panelJuego.disparo = true;
+		panelJuego.hiloTiempo.setPausa(true);
+		
 	}
 
 	@Override
@@ -141,7 +143,7 @@ System.out.println("Aleatorio: "+aleatorio);
 	 * @return true si el disparo ha sido ilegal : false si ha sido correcto
 	 */
 	public boolean disparoIlegal() {
-		if (hiloTiempo.getTiempoDeJuego() / 1000000000 < 0) {
+		if (panelJuego.hiloTiempo.getTiempoDeJuego() / 1000000000 < 0) {
 			return true;
 		}
 		return false;
@@ -169,11 +171,11 @@ System.out.println("Aleatorio: "+aleatorio);
 
 		if (tiempoFases == aleatorio) {
 			// tiempoDeJuego = 0;
-			hiloTiempo.iniciarTiempoDeJuego();
+			panelJuego.hiloTiempo.iniciarTiempoDeJuego();
 
 			// Al salir la instrucción fire, comienza el tiempo inicial.
-			hiloTiempo.iniciarTiempoInicial();
-			hiloTiempo.start();
+			panelJuego.hiloTiempo.iniciarTiempoInicial();
+			panelJuego.hiloTiempo.start();
 		}
 
 		if ((tiempoFases >= aleatorio) && (tiempoFases <= (aleatorio + 20))) {
@@ -187,6 +189,33 @@ System.out.println("Aleatorio: "+aleatorio);
 
 	}
 
+	public void pintarPantallaVictoria() {
+		
+		if (panelJuego.heGanado) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			panelJuego.disparo = false;
+			panelJuego.setPantalla(new PantallaVictoria(panelJuego));
+		}
+	}
+
+	public void pintarPantallaDerrota() {
+		if (panelJuego.ganaMaquina) {
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			panelJuego.disparo = false;
+			panelJuego.setPantalla(new PantallaDerrota(panelJuego));
+		}
+	}
+
 	public void pintarTiempo(Graphics g, int valor) {
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", 3, 25));
@@ -196,10 +225,12 @@ System.out.println("Aleatorio: "+aleatorio);
 		case 1:
 			g.drawString(formatoDecimal.format(protagonista.getTiempoDisparo()), panelJuego.getWidth() / 2 - 20,
 					panelJuego.getHeight() / 2 + 100);
+			panelJuego.heGanado = true;
 			break;
 		case 2:
 			g.drawString(formatoDecimal.format(enemigo.getTiempoDisparo()), panelJuego.getWidth() / 2 - 20,
 					panelJuego.getHeight() / 2 - 90);
+			panelJuego.ganaMaquina = true;
 			break;
 		}
 	}

@@ -9,6 +9,7 @@ public class HiloTiempo extends Thread{
 	public double disparo;
 	boolean pausa = false;
 	public HiloTiempo() {
+		disparo = Math.random();
 	}
 	
 	

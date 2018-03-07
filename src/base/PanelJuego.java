@@ -24,6 +24,12 @@ import pantallas.PantallaInicial;
 
 public class PanelJuego extends JPanel implements Runnable, MouseListener, MouseMotionListener, ComponentListener {
 
+	public boolean heGanado;
+	public boolean ganaMaquina;
+	public boolean disparo;
+	public HiloTiempo hiloTiempo;
+	public int valor;
+	
 	private static final long serialVersionUID = 1L;
 	Pantalla pantallaActual;
 	
@@ -49,7 +55,9 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 	public PanelJuego() {
 
 		pantallaActual = new PantallaInicial(this);
-
+		heGanado = false;
+		ganaMaquina = false;
+		valor = 0;
 		// MouseMotion
 		this.addMouseMotionListener(this);
 		// MouseListener:

@@ -33,7 +33,7 @@ public class PantallaInicial implements Pantalla {
 	@Override
 	public void inicializarPantalla() {
 		try {
-			fondo = ImageIO.read(new File("Imagenes/fondos/fondoinicial.png"));
+			fondo = ImageIO.read(new File("Imagenes/fondos/pantallaInicio.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -35,7 +35,7 @@ public class PantallaVictoria implements Pantalla{
 	@Override
 	public void inicializarPantalla() {
 		try {
-			fondo = ImageIO.read(new File("Imagenes/fondos/victoria.jpg"));
+			fondo = ImageIO.read(new File("Imagenes/fondos/pantallaVictoria.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,8 +49,6 @@ public class PantallaVictoria implements Pantalla{
 		
 		g.setFont(quicksand);
 		g.setColor(Color.WHITE);
-		
-		g.drawString("TU PUNTUACIÓN HA SIDO: "+ tiempo, panelJuego.getWidth()/2-230, panelJuego.getHeight()/2+90);
 	}
 
 	@Override

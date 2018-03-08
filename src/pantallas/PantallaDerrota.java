@@ -35,7 +35,7 @@ public class PantallaDerrota implements Pantalla{
 	@Override
 	public void inicializarPantalla() {
 		try {
-			fondo = ImageIO.read(new File("Imagenes/fondos/gameover.png"));
+			fondo = ImageIO.read(new File("Imagenes/fondos/pantallaDerrota.jpg"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

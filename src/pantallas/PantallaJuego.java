@@ -45,10 +45,12 @@ public class PantallaJuego implements Pantalla {
 		inicializarPantalla();
 		redimensionarPantalla();
 		System.out.println("Aleatorio: " + aleatorio);
+		
 	}
 
 	@Override
 	public void inicializarPantalla() {
+		
 		try {
 
 			fondo = ImageIO.read(new File("Imagenes/fondos/fondoduelo.png"));
@@ -56,14 +58,14 @@ public class PantallaJuego implements Pantalla {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+				
 		//Inicializo el Sprite del Protagonista
 		protagonista = new Sprite(Color.black, 200, 200, (panelJuego.getWidth() / 2) - 100,
 				(panelJuego.getHeight() / 2) + 80, "Imagenes/protagonistas/protagonista_03.png");
 		
 		//Inicializo el Sprite del enemigo
 		enemigo = new Sprite(Color.black, 200, 200, (panelJuego.getWidth() / 2) - 100,
-				(panelJuego.getHeight() / 2) - 280, panelJuego.hiloTiempo.getDisparo(), "Imagenes/enemigos/enemigo_02.png");
+				(panelJuego.getHeight() / 2) - 280, panelJuego.hiloTiempo.getDisparo(), "Imagenes/enemigos/enemigo_04.png");
 		
 		//Creo un formato decimal para mostrar el tiempo
 		formatoDecimal = new DecimalFormat("#.###");
@@ -94,11 +96,11 @@ public class PantallaJuego implements Pantalla {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			//Si el tiempo ha dejado de contar y no ha habido disparo, gana la máquina
 			if ((panelJuego.hiloTiempo.isPausa()) && (!panelJuego.disparo)) {
-				panelJuego.valor = 2; // se pinta el tiempo en la parte del sprite maquina
-				
 				protagonista.actualizarBuffer("Imagenes/protagonistas/protagonistadesarmado_03.png");
-				enemigo.actualizarBuffer("Imagenes/enemigos/enemigodisparando_02.png");
+				enemigo.actualizarBuffer("Imagenes/enemigos/enemigodisparando_04.png");
+				panelJuego.valor = 2; // se pinta el tiempo en la parte del sprite maquina
 				panelJuego.disparo = true;
 			}
 			pintarPantallaVictoria();
@@ -115,12 +117,13 @@ public class PantallaJuego implements Pantalla {
 	public void pulsarRaton(MouseEvent e) {
 		miDisparo = new Sonido("Sonidos/disparo1.mp3");
 		miDisparo.start();
-		protagonista.actualizarBuffer("Imagenes/protagonistas/protagonistadisparando_03.png");
-		enemigo.actualizarBuffer("Imagenes/enemigos/enemigodesarmado_02.png");
-		
-		
 		protagonista.setTiempoDisparo(panelJuego.hiloTiempo.getTiempoDeJuego() / 1000000000);
+		
+		
+		
 		if (!panelJuego.ganaMaquina) {
+			protagonista.actualizarBuffer("Imagenes/protagonistas/protagonistadisparando_03.png");
+			enemigo.actualizarBuffer("Imagenes/enemigos/enemigodesarmado_04.png");
 			panelJuego.valor = 1;
 			panelJuego.heGanado = true;
 		}
@@ -203,6 +206,7 @@ public class PantallaJuego implements Pantalla {
 	public void pintarPantallaVictoria() {
 		
 		if (panelJuego.heGanado) {
+			
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {

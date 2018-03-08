@@ -102,6 +102,7 @@ public class PantallaJuego implements Pantalla {
 				enemigo.actualizarBuffer("Imagenes/enemigos/enemigodisparando_04.png");
 				panelJuego.valor = 2; // se pinta el tiempo en la parte del sprite maquina
 				panelJuego.disparo = true;
+				
 			}
 			pintarPantallaVictoria();
 			pintarPantallaDerrota();
@@ -214,6 +215,7 @@ public class PantallaJuego implements Pantalla {
 				e.printStackTrace();
 			}
 			panelJuego.disparo = false;
+			
 			panelJuego.setPantalla(new PantallaVictoria(panelJuego));
 		}
 	}
@@ -230,6 +232,7 @@ public class PantallaJuego implements Pantalla {
 			
 			
 			panelJuego.disparo = false;
+			
 			panelJuego.setPantalla(new PantallaDerrota(panelJuego));
 		}
 	}

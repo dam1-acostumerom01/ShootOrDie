@@ -47,20 +47,13 @@ public class PantallaVictoria implements Pantalla{
 	public void renderizarPantalla(Graphics g) {
 		rellenarFondo(g);
 		
-		g.setFont(quicksand);
-		g.setColor(Color.WHITE);
 	}
 
 	@Override
 	public void ejecutarFrame() {
-		while (true) {
-
+		
 			panelJuego.repaint();
-			try {
-				Thread.sleep(25);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}}
+			
 		
 	}
 

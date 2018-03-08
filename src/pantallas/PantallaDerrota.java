@@ -65,7 +65,6 @@ public class PantallaDerrota implements Pantalla{
 	@Override
 	public void moverRaton(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -73,6 +72,7 @@ public class PantallaDerrota implements Pantalla{
 		panelJuego.ganaMaquina=false;
 		panelJuego.heGanado=false;
 		panelJuego.disparo= false;
+		
 		panelJuego.setPantalla(new PantallaInicial(panelJuego));
 		
 	}
@@ -80,7 +80,6 @@ public class PantallaDerrota implements Pantalla{
 	@Override
 	public void redimensionarPantalla() {
 		fondoEscalado = fondo.getScaledInstance(panelJuego.getWidth(), panelJuego.getHeight(), Image.SCALE_SMOOTH);
-		
 	}
 
 }

@@ -20,6 +20,7 @@ public class PantallaInicial implements Pantalla {
 	Image fondoEscalado = null;
 	PanelJuego panelJuego;
 	
+	
 	public PantallaInicial(PanelJuego panelJuego) {
 		this.panelJuego = panelJuego;
 		inicializarPantalla();
@@ -32,15 +33,17 @@ public class PantallaInicial implements Pantalla {
 	
 	@Override
 	public void inicializarPantalla() {
+		panelJuego.musicaInicio = new Sonido("Sonidos/musicaInicio.mp3");
+		panelJuego.musicaInicio.start();
 		try {
 			fondo = ImageIO.read(new File("Imagenes/fondos/pantallaInicio.jpg"));
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		panelJuego.valor = 0;
-		panelJuego.musicaInicio = new Sonido("Sonidos/musicaInicio.mp3");
-		panelJuego.musicaInicio.start();
+		
 	}
 	
 	private void rellenarFondo(Graphics g) {
@@ -52,18 +55,13 @@ public class PantallaInicial implements Pantalla {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, panelJuego.getWidth(), panelJuego.getHeight());
 		rellenarFondo(g);
-		
-
 	}
 	
 	
 
 	@Override
 	public void ejecutarFrame() {
-		panelJuego.repaint();
-		try {	Thread.sleep(200);	} catch (InterruptedException e) {e.printStackTrace();}
-		colorLetra = colorLetra == Color.GREEN ? Color.RED : Color.GREEN;
-		
+			panelJuego.repaint();
 	}
 
 	@Override
@@ -76,22 +74,21 @@ public class PantallaInicial implements Pantalla {
 	public void pulsarRaton(MouseEvent e) {
 		//Al pulsar el ratón, la pantalla cambiará a la pantalla de juego
 		//panelJuego.disparo = false;
+		
+		
 		panelJuego.hiloTiempo = new HiloTiempo();
 		panelJuego.setPantallaActual(new PantallaJuego(panelJuego));
 		panelJuego.musicaInicio.pararMusica();
-		try {
-			panelJuego.musicaInicio.join();
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 	}
 
 	@Override
 	public void redimensionarPantalla() {
+		
 		if ((panelJuego.getWidth()==0) && (panelJuego.getHeight()==0)) {
 			fondoEscalado = fondo.getScaledInstance(600, 400, Image.SCALE_SMOOTH);
 		}else {
+			
 		fondoEscalado = fondo.getScaledInstance(panelJuego.getWidth(), panelJuego.getHeight(), Image.SCALE_SMOOTH);
 		}}
 

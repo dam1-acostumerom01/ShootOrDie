@@ -61,13 +61,6 @@ public class HiloTiempo extends Thread{
 	public synchronized void pararTiempo() {
 		while (tiempoDeJuego/1000000000>=disparo) {
 			pausa = true;
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
 		}
 		float tiempoActual = System.nanoTime();
 		tiempoDeJuego = tiempoActual - tiempoInicial;

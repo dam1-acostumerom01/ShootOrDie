@@ -28,8 +28,9 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 	public boolean ganaMaquina;
 	public boolean disparo;
 	public HiloTiempo hiloTiempo;
-	public int valor;
 	public Sonido musicaInicio;
+	public int valor;
+	
 	
 	
 	private static final long serialVersionUID = 1L;
@@ -60,6 +61,7 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 		heGanado = false;
 		ganaMaquina = false;
 		valor = 0;
+		
 		// MouseMotion
 		this.addMouseMotionListener(this);
 		// MouseListener:

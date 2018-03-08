@@ -57,7 +57,7 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 	 */
 	public PanelJuego() {
 
-		pantallaActual = new PantallaInicial(this);
+		pantallaActual = new PantallaInicial(PanelJuego.this);
 		heGanado = false;
 		ganaMaquina = false;
 		valor = 0;
@@ -92,6 +92,7 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 	public void run() {
 		while (true) {
 			pantallaActual.ejecutarFrame();
+			System.out.println(getPantallaActual());
 		}
 
 	}
@@ -165,6 +166,10 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 
 	public void setPantalla(Pantalla pantallaActual) {
 		this.pantallaActual = pantallaActual;
+	}
+	
+	public Pantalla getPantalla() {
+		return pantallaActual;
 	}
 
 }

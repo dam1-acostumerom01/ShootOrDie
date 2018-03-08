@@ -24,7 +24,9 @@ public class PantallaInicial implements Pantalla {
 	public PantallaInicial(PanelJuego panelJuego) {
 		this.panelJuego = panelJuego;
 		inicializarPantalla();
+		System.out.println("hola");
 		redimensionarPantalla();
+		
 	}
 	
 	public PantallaInicial() {
@@ -62,6 +64,12 @@ public class PantallaInicial implements Pantalla {
 	@Override
 	public void ejecutarFrame() {
 			panelJuego.repaint();
+			try {
+				Thread.sleep(25);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	@Override
@@ -77,8 +85,9 @@ public class PantallaInicial implements Pantalla {
 		
 		
 		panelJuego.hiloTiempo = new HiloTiempo();
-		panelJuego.setPantallaActual(new PantallaJuego(panelJuego));
 		panelJuego.musicaInicio.pararMusica();
+		panelJuego.setPantallaActual(new PantallaJuego(panelJuego));
+		
 		
 	}
 

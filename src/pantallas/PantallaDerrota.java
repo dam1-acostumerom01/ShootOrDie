@@ -51,14 +51,12 @@ public class PantallaDerrota implements Pantalla{
 
 	@Override
 	public void ejecutarFrame() {
-		while (true) {
-
 			panelJuego.repaint();
 			try {
 				Thread.sleep(25);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-			}}
+			}
 		
 	}
 

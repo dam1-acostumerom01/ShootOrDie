@@ -36,9 +36,6 @@ public class PantallaJuego implements Pantalla {
 	public Sonido miDisparo;
 	public Sonido disparoMaquina;
 	
-	
-	
-
 	public PantallaJuego(PanelJuego panelJuego) {
 		this.panelJuego = panelJuego;
 		
@@ -76,7 +73,6 @@ public class PantallaJuego implements Pantalla {
 
 	@Override
 	public void renderizarPantalla(Graphics g) {
-		System.out.println("Valor?   --> "+panelJuego.valor);
 		rellenarFondo(g);
 		pintarFases(g);
 		protagonista.pintarSpriteEnMundo(g);
@@ -89,7 +85,7 @@ public class PantallaJuego implements Pantalla {
 
 	@Override
 	public void ejecutarFrame() {
-		while (true) {
+		
 			panelJuego.repaint();
 			try {
 				Thread.sleep(25);
@@ -106,7 +102,7 @@ public class PantallaJuego implements Pantalla {
 			}
 			pintarPantallaVictoria();
 			pintarPantallaDerrota();
-		}
+		
 	}
 
 	@Override
@@ -216,7 +212,7 @@ public class PantallaJuego implements Pantalla {
 			}
 			panelJuego.disparo = false;
 			
-			panelJuego.setPantalla(new PantallaVictoria(panelJuego));
+			panelJuego.setPantallaActual(new PantallaVictoria(panelJuego));
 		}
 	}
 
@@ -233,7 +229,7 @@ public class PantallaJuego implements Pantalla {
 			
 			panelJuego.disparo = false;
 			
-			panelJuego.setPantalla(new PantallaDerrota(panelJuego));
+			panelJuego.setPantallaActual(new PantallaDerrota(panelJuego));
 		}
 	}
 

@@ -46,14 +46,19 @@ public class PantallaVictoria implements Pantalla{
 	@Override
 	public void renderizarPantalla(Graphics g) {
 		rellenarFondo(g);
-		
+		System.out.println("victoria");
 	}
 
 	@Override
 	public void ejecutarFrame() {
 		
 			panelJuego.repaint();
-			
+			try {
+				Thread.sleep(25);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
 	}
 

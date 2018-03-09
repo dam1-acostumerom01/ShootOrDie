@@ -1,3 +1,4 @@
+
 package pantallas;
 
 import java.awt.Color;
@@ -12,6 +13,7 @@ import java.text.DecimalFormat;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
 
 import base.HiloTiempo;
 import base.PanelJuego;
@@ -31,23 +33,32 @@ public class PantallaJuego implements Pantalla {
 	public double tiempoProtagonista, tiempoEnemigo, tiempoInicial, tiempoFases;
 	public double tiempoDeJuego = -1;
 	Random rd = new Random();
-	int aleatorio = rd.nextInt(100) + 100;
+	int aleatorio = rd.nextInt(100) + 150;
 	private DecimalFormat formatoDecimal;
 	public Sonido miDisparo;
 	public Sonido disparoMaquina;
+	public static String[] enemigos = { "Imagenes/enemigos/enemigo_01.png", "Imagenes/enemigos/enemigo_02.png",
+			"Imagenes/enemigos/enemigo_03.png", "Imagenes/enemigos/enemigo_04.png" };
+	public static String[] enemigosDisparando = { "Imagenes/enemigos/enemigodisparando_01.png",
+			"Imagenes/enemigos/enemigodisparando_02.png", "Imagenes/enemigos/enemigodisparando_03.png",
+			"Imagenes/enemigos/enemigodisparando_04.png" };
+	public static String[] enemigosDesarmados = { "Imagenes/enemigos/enemigodesarmado_01.png",
+			"Imagenes/enemigos/enemigodesarmado_02.png", "Imagenes/enemigos/enemigodesarmado_03.png",
+			"Imagenes/enemigos/enemigodesarmado_04.png" };
 	
+
 	public PantallaJuego(PanelJuego panelJuego) {
 		this.panelJuego = panelJuego;
-		
+
 		inicializarPantalla();
 		redimensionarPantalla();
 		System.out.println("Aleatorio: " + aleatorio);
-		
+
 	}
 
 	@Override
 	public void inicializarPantalla() {
-		
+
 		try {
 
 			fondo = ImageIO.read(new File("Imagenes/fondos/fondoduelo.png"));
@@ -55,19 +66,20 @@ public class PantallaJuego implements Pantalla {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-				
-		//Inicializo el Sprite del Protagonista
+
+		// Inicializo el Sprite del Protagonista
 		protagonista = new Sprite(Color.black, 200, 200, (panelJuego.getWidth() / 2) - 100,
 				(panelJuego.getHeight() / 2) + 80, "Imagenes/protagonistas/protagonista_03.png");
-		
-		//Inicializo el Sprite del enemigo
+
+		// Inicializo el Sprite del enemigo
 		enemigo = new Sprite(Color.black, 200, 200, (panelJuego.getWidth() / 2) - 100,
-				(panelJuego.getHeight() / 2) - 280, panelJuego.hiloTiempo.getDisparo(), "Imagenes/enemigos/enemigo_04.png");
-		
-		//Creo un formato decimal para mostrar el tiempo
+				(panelJuego.getHeight() / 2) - 280, panelJuego.hiloTiempo.getDisparo(),
+				enemigos[panelJuego.enemigoEscogido]);
+
+		// Creo un formato decimal para mostrar el tiempo
 		formatoDecimal = new DecimalFormat("#.###");
 		System.out.println("DISPARO ENEMIGO EN: " + enemigo.getTiempoDisparo());
-		//Inicializo el tiempo de fases
+		// Inicializo el tiempo de fases
 		tiempoFases = 0;
 	}
 
@@ -85,24 +97,24 @@ public class PantallaJuego implements Pantalla {
 
 	@Override
 	public void ejecutarFrame() {
-		
-			panelJuego.repaint();
-			try {
-				Thread.sleep(25);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			//Si el tiempo ha dejado de contar y no ha habido disparo, gana la máquina
-			if ((panelJuego.hiloTiempo.isPausa()) && (!panelJuego.disparo)) {
-				protagonista.actualizarBuffer("Imagenes/protagonistas/protagonistadesarmado_03.png");
-				enemigo.actualizarBuffer("Imagenes/enemigos/enemigodisparando_04.png");
-				panelJuego.valor = 2; // se pinta el tiempo en la parte del sprite maquina
-				panelJuego.disparo = true;
-				
-			}
-			pintarPantallaVictoria();
-			pintarPantallaDerrota();
-		
+
+		panelJuego.repaint();
+		try {
+			Thread.sleep(25);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		// Si el tiempo ha dejado de contar y no ha habido disparo, gana la máquina
+		if ((panelJuego.hiloTiempo.isPausa()) && (!panelJuego.disparo)) {
+			protagonista.actualizarBuffer("Imagenes/protagonistas/protagonistadesarmado_03.png");
+			enemigo.actualizarBuffer(enemigosDisparando[panelJuego.enemigoEscogido]);
+			panelJuego.valor = 2; // se pinta el tiempo en la parte del sprite maquina
+			panelJuego.disparo = true;
+
+		}
+		pintarPantallaVictoria();
+		pintarPantallaDerrota();
+
 	}
 
 	@Override
@@ -112,22 +124,26 @@ public class PantallaJuego implements Pantalla {
 
 	@Override
 	public void pulsarRaton(MouseEvent e) {
-		miDisparo = new Sonido("Sonidos/disparo1.mp3");
-		miDisparo.start();
-		protagonista.setTiempoDisparo(panelJuego.hiloTiempo.getTiempoDeJuego() / 1000000000);
-		
-		
-		
-		if (!panelJuego.ganaMaquina) {
-			protagonista.actualizarBuffer("Imagenes/protagonistas/protagonistadisparando_03.png");
-			enemigo.actualizarBuffer("Imagenes/enemigos/enemigodesarmado_04.png");
-			panelJuego.valor = 1;
-			panelJuego.heGanado = true;
+		//Si se pulsa el ratón y el tiempo de juego es menor o igual a 0, es disparo ilegal. No deja disparar.
+		if ((e.getClickCount() >= 0) && (panelJuego.hiloTiempo.getTiempoDeJuego() / 1000000000 <= 0)) {
+			System.out.println("Disparo ilegal.");
+			
+		} else {
+			//Si todo está en regla, se produce un disparo normal:
+			miDisparo = new Sonido("Sonidos/disparo1.mp3");
+			miDisparo.start();
+			protagonista.setTiempoDisparo(panelJuego.hiloTiempo.getTiempoDeJuego() / 1000000000);
+			//Comprobamos que no haya disparado ya la máquina antes
+			if (!panelJuego.ganaMaquina) {
+				protagonista.actualizarBuffer("Imagenes/protagonistas/protagonistadisparando_03.png");
+				enemigo.actualizarBuffer(enemigosDesarmados[panelJuego.enemigoEscogido]);
+				panelJuego.valor = 1;
+				panelJuego.heGanado = true;
+			}
+			
+			panelJuego.disparo = true;
+			panelJuego.hiloTiempo.setPausa(true);
 		}
-		
-		panelJuego.disparo = true;
-		panelJuego.hiloTiempo.setPausa(true);
-		
 	}
 
 	@Override
@@ -181,7 +197,6 @@ public class PantallaJuego implements Pantalla {
 		}
 
 		if (tiempoFases == aleatorio) {
-			// tiempoDeJuego = 0;
 			panelJuego.hiloTiempo.iniciarTiempoDeJuego();
 
 			// Al salir la instrucción fire, comienza el tiempo inicial.
@@ -189,7 +204,7 @@ public class PantallaJuego implements Pantalla {
 			panelJuego.hiloTiempo.start();
 		}
 
-		if ((tiempoFases >= aleatorio) && (tiempoFases <= (aleatorio + 20))) {
+		if ((tiempoFases >= aleatorio) && (tiempoFases <= (aleatorio + 30))) {
 			fire = new Sprite(Color.BLACK, 200, 100, (panelJuego.getWidth() / 2) - 100,
 					(panelJuego.getHeight() / 2) - 50, "Imagenes/fases/fire.png");
 			fire.pintarSpriteEnMundo(g);
@@ -200,10 +215,15 @@ public class PantallaJuego implements Pantalla {
 
 	}
 
+	/**
+	 * Método que pinta la pantalla siguiente o la pantalla de victoria, según el enemigo que haya sido.
+	 * Si aún no has acabado con todos los enemigos, pasas a la pantalla siguiente.
+	 * Si has acabado con el último, pasa a la pantalla de victoria.
+	 */
 	public void pintarPantallaVictoria() {
-		
+
 		if (panelJuego.heGanado) {
-			
+
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
@@ -211,40 +231,51 @@ public class PantallaJuego implements Pantalla {
 				e.printStackTrace();
 			}
 			panelJuego.disparo = false;
-			
-			panelJuego.setPantallaActual(new PantallaVictoria(panelJuego));
+			if (panelJuego.enemigoEscogido < 3) {
+				panelJuego.enemigoEscogido++;
+				panelJuego.setPantallaActual(new PantallaSiguiente(panelJuego));
+			} else {
+				panelJuego.setPantallaActual(new PantallaVictoria(panelJuego));
+			}
 		}
 	}
 
+	/**
+	 * Pinta una pantalla de derrota cuando pierdes contra el enemigo
+	 */
 	public void pintarPantallaDerrota() {
 		if (panelJuego.ganaMaquina) {
 			try {
 				Thread.sleep(2000);
-				
+
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
+
 			panelJuego.disparo = false;
-			
+
 			panelJuego.setPantallaActual(new PantallaDerrota(panelJuego));
 		}
 	}
 
 	public void pintarTiempo(Graphics g, int valor) {
 		g.setColor(Color.WHITE);
-		g.setFont(new Font("Arial", 3, 25));
+		/*He intentado meter la fuente que uso en todo el juego (Está en la carpeta "Fuentes"), pero no se
+		por qué me fallaba muchísimo el cambio de imagen del sprite y había lag a la hora de pintar el tiempo.
+		Creo que puede ser porque la fuente es .otf y los programas van mejor con fuentes .ttf, pero no estoy seguro.*/
+		g.setFont(new Font("Arial", Font.BOLD, 15));
 		switch (valor) {
 		case 0:
 			break;
 		case 1:
+		
 			g.drawString(formatoDecimal.format(protagonista.getTiempoDisparo()), panelJuego.getWidth() / 2 - 20,
 					panelJuego.getHeight() / 2 + 100);
 			panelJuego.heGanado = true;
 			break;
 		case 2:
+		
 			g.drawString(formatoDecimal.format(enemigo.getTiempoDisparo()), panelJuego.getWidth() / 2 - 20,
 					panelJuego.getHeight() / 2 - 90);
 			disparoMaquina = new Sonido("Sonidos/disparo2.mp3");

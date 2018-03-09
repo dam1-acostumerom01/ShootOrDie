@@ -30,6 +30,7 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 	public HiloTiempo hiloTiempo;
 	public Sonido musicaInicio;
 	public int valor;
+	public int enemigoEscogido = 0;
 	
 	
 	
@@ -92,7 +93,7 @@ public class PanelJuego extends JPanel implements Runnable, MouseListener, Mouse
 	public void run() {
 		while (true) {
 			pantallaActual.ejecutarFrame();
-			System.out.println(getPantallaActual());
+			
 		}
 
 	}
